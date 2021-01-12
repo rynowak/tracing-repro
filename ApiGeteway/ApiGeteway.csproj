@@ -5,9 +5,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" NoWarn="NU1605" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
+        <PackageReference Include="Google.Protobuf" Version="3.14.0" />
+        <PackageReference Include="Grpc.Net.ClientFactory" Version="2.34.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.34.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Protobuf Include="..\WeatherMicroservice\Protos\weather.proto" GrpcServices="Client">
+            <Link>Protos\weather.proto</Link>
+        </Protobuf>
     </ItemGroup>
 
 </Project>
