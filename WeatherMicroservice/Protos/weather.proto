@@ -15,6 +15,7 @@ service Weather {
 
 message WeatherReply {
   repeated WeatherForecast forecasts = 1;
+  int32 count = 2;
 }
 
 // The response message containing the Forecast.

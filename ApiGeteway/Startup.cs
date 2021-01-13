@@ -1,3 +1,5 @@
+using System;
+using System.Text.Json;
 using ApiGeteway.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WeatherMicroservice.Services;
 
 namespace ApiGeteway
 {
@@ -20,12 +23,21 @@ namespace ApiGeteway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddDapr(builder => builder.UseJsonSerializationOptions(new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    PropertyNameCaseInsensitive = true
+                }));
+
+            services.AddGrpcClient<Weather.WeatherClient>(o => o.Address = new Uri("http://localhost:3666"));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiGeteway", Version = "v1"});
             });
-            
+
             services.AddTransient<IWeatherService, WeatherService>();
         }
 

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Text.Json;
+using Dapr.AppCallback.Autogen.Grpc.v1;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WeatherMicroservice.Dapr;
 using WeatherMicroservice.Services;
 
 namespace WeatherMicroservice
@@ -14,6 +17,13 @@ namespace WeatherMicroservice
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddDaprClient(builder => builder.UseJsonSerializationOptions(new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNameCaseInsensitive = true
+            }));
+            services.AddTransient<IWeatherService, WeatherService>();
+            services.AddTransient<AppCallback.AppCallbackBase, DaprGrpcDispatcher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -26,6 +36,7 @@ namespace WeatherMicroservice
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<WeatherService>();
+                endpoints.MapGrpcService<DaprGrpcDispatcher>();
 
                 endpoints.MapGet("/",
                     async context =>

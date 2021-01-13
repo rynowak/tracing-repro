@@ -1,13 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using WeatherMicroservice.Dapr;
 
 namespace WeatherMicroservice.Services
 {
-    public class WeatherService : Weather.WeatherBase
+    public class WeatherService : Weather.WeatherBase, IWeatherService
     {
         private static readonly string[] Summaries =
         {
@@ -38,8 +40,26 @@ namespace WeatherMicroservice.Services
 
             return new WeatherReply
             {
-                Forecasts = {forecasts}
+                Forecasts = {forecasts},
+                Count = forecasts.Length
             };
+        }
+
+        public async Task<IEnumerable<WeatherForecastDto>> GetForecast()
+        {
+            var rng = new Random();
+            var now = DateTime.UtcNow;
+
+            var forecasts = Enumerable.Range(1, 100).Select(index => new WeatherForecastDto
+                {
+                    Date = now.AddDays(index),
+                    TemperatureC = rng.Next(-20, 55),
+                    Summary = Summaries[rng.Next(Summaries.Length)]
+                })
+                .ToArray();
+
+            await Task.Delay(2000); // Gotta look busy
+            return forecasts;
         }
 
         public override async Task GetForecastStream(Empty request, IServerStreamWriter<WeatherForecast> responseStream,
