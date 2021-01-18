@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using ApiGeteway.Services;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +32,7 @@ namespace ApiGeteway
                     PropertyNameCaseInsensitive = true
                 }));
 
+            services.AddGrpcClient<Weather.WeatherClient>(o => o.Address = new Uri("http://localhost:3666"));
             services.AddGrpcClient<Weather.WeatherClient>(o => o.Address = new Uri("http://localhost:3666"));
 
             services.AddSwaggerGen(c =>

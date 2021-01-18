@@ -2,14 +2,13 @@
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using WeatherMicroservice.Services;
 
-namespace WeatherMicroservice.Dapr
+namespace WeatherMicroservice.Services
 {
     public interface IWeatherService
     {
         public Task<WeatherReply> GetForecast(Empty request, ServerCallContext context);
 
-        public Task<IEnumerable<WeatherForecastDto>> GetForecast();
+        public Task<IEnumerable<WeatherForecastDto>> GetForecastDto();
     }
 }

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using WeatherMicroservice.Dapr;
 
 namespace WeatherMicroservice.Services
 {
@@ -37,7 +36,7 @@ namespace WeatherMicroservice.Services
                 .ToArray();
 
             await Task.Delay(2000); // Gotta look busy
-
+            
             return new WeatherReply
             {
                 Forecasts = {forecasts},
@@ -45,7 +44,7 @@ namespace WeatherMicroservice.Services
             };
         }
 
-        public async Task<IEnumerable<WeatherForecastDto>> GetForecast()
+        public async Task<IEnumerable<WeatherForecastDto>> GetForecastDto()
         {
             var rng = new Random();
             var now = DateTime.UtcNow;

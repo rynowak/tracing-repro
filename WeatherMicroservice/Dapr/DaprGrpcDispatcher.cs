@@ -6,6 +6,7 @@ using Dapr.Client.Autogen.Grpc.v1;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using WeatherMicroservice.Services;
 
 namespace WeatherMicroservice.Dapr
 {
@@ -25,10 +26,14 @@ namespace WeatherMicroservice.Dapr
             switch (request.Method)
             {
                 case "GetForecast":
-                    var reply = await _weatherService.GetForecast();
+                    WeatherReply weatherReply = await _weatherService.GetForecast(new Empty(), context);
+                    // var reply = await _weatherService.GetForecastDto();
                     var any = new Any
                     {
-                        Value = ByteString.CopyFrom(JsonSerializer.SerializeToUtf8Bytes(reply, _jsonOptions))
+                        TypeUrl = WeatherReply.Descriptor.File.Name,
+                        Value = weatherReply.ToByteString()
+                        //Value = ByteString.CopyFrom(JsonSerializer.SerializeToUtf8Bytes(weatherReply, _jsonOptions))
+                        //Value = ByteString.CopyFrom(JsonSerializer.SerializeToUtf8Bytes(reply, _jsonOptions))
                     };
                     response.Data = any;
                     return response;

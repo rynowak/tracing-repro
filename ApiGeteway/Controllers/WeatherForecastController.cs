@@ -4,6 +4,7 @@ using ApiGeteway.Models;
 using ApiGeteway.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WeatherMicroservice.Services;
 
 namespace ApiGeteway.Controllers
 {
@@ -25,10 +26,16 @@ namespace ApiGeteway.Controllers
             _weatherService = weatherService;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<WeatherForecastDto>> Get()
+        [HttpGet("Dapr")]
+        public async Task<IEnumerable<WeatherForecastDto>> GetByDapr()
         {
-            return await _weatherService.GetForecasts();
+            return await _weatherService.GetForecastsByDapr();
+        }
+
+        [HttpGet("Grpc")]
+        public async Task<WeatherReply> GetByGrpc()
+        {
+            return await _weatherService.GetForecastsByGrpc();
         }
     }
 }
