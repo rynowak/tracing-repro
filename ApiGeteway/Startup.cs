@@ -31,7 +31,7 @@ namespace ApiGeteway
                     PropertyNameCaseInsensitive = true
                 }));
 
-            services.AddGrpcClient<Weather.WeatherClient>();
+            services.AddGrpcClient<Weather.WeatherClient>(o => o.Address = new Uri("http://localhost:5001"));
 
             services.AddSwaggerGen(c =>
             {

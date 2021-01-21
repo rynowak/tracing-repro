@@ -22,25 +22,25 @@ namespace WeatherMicroservice
         }
 
         public IConfiguration Configuration { get; }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.AddGrpc(o => o.EnableDetailedErrors = true);
-            
+
             services.AddDaprClient(builder => builder.UseJsonSerializationOptions(new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 PropertyNameCaseInsensitive = true
             }));
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Weather Microservice", Version = "v1"});
             });
-            
+
             services.AddMediatR(typeof(Startup));
             services.AddTransient<IWeatherForecastRepository, WeatherForecastRepository>();
             services.AddTransient<AppCallback.AppCallbackBase, DaprGrpcDispatcher>();
@@ -57,13 +57,13 @@ namespace WeatherMicroservice
             }
 
             app.UseRouting();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapGrpcService<WeatherService>();
                 endpoints.MapGrpcService<DaprGrpcDispatcher>();
-                
+
                 endpoints.MapGet("/",
                     async context =>
                     {

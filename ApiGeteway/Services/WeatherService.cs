@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Buffers;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ApiGeteway.Models;
@@ -14,16 +14,14 @@ namespace ApiGeteway.Services
 {
     public class WeatherService : IWeatherService
     {
-        private const string WeatherName = "weather";
+        private const string WeatherHttp = "weather-http";
+        private const string WeatherGrpc = "weather-grpc";
         private const int DaprHttpPort = 3500;
-        private const int DaprGrpcPort = 3501;
         private readonly DaprClient _dapr;
-        private readonly string _daprGrpc = $"http://localhost:${DaprGrpcPort}/v1.0/invoke/${WeatherName}";
-        private readonly string _daprGrpc2 = $"http://localhost:${DaprGrpcPort}";
-        private readonly string _daprUrl = $"http://localhost:${DaprHttpPort}/v1.0/invoke/${WeatherName}";
+        private readonly string _daprUrl = $"http://localhost:{DaprHttpPort}/v1.0/invoke/{WeatherHttp}";
         private ILogger<WeatherService> _logger;
 
-        public WeatherService(ILoggerFactory loggerFactory, Weather.WeatherClient client, DaprClient dapr)
+        public WeatherService(ILoggerFactory loggerFactory, DaprClient dapr)
         {
             _logger = loggerFactory.CreateLogger<WeatherService>();
             _dapr = dapr;
@@ -38,19 +36,23 @@ namespace ApiGeteway.Services
             return response;
         }
 
-        public async Task<IEnumerable<WeatherForecastDto>> GetForecastsByDapr()
+        public async Task<IEnumerable<WeatherForecastDto>> GetForecastsByRest()
+        {
+            var httpClient = new HttpClient();
+            var streamAsync = httpClient.GetStreamAsync($"{_daprUrl}/method/Weather");
+            var result = await JsonSerializer.DeserializeAsync<IEnumerable<WeatherForecastDto>>(await streamAsync);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<WeatherForecastDto>> GetForecastsByDaprGrpc()
         {
             Console.WriteLine("Invoking grpc weather forecasts");
 
             try
             {
-                //var res = await _dapr.InvokeMethodAsync<IEnumerable<WeatherForecastDto>>(WeatherName, "GetForecast");
-                var res3 = await _dapr.InvokeMethodAsync<object>(WeatherName, "GetForecast");
-                var res2 = await _dapr.InvokeMethodAsync<WeatherReply>(WeatherName, "GetForecast");
-                /*Console.WriteLine($"Mir hei {res.Count()} vorhärsage:");
-                Console.WriteLine($"{JsonSerializer.Serialize(res)}");
-                */
-                return null;
+                var res = await _dapr.InvokeMethodAsync<IEnumerable<WeatherForecastDto>>(WeatherGrpc, "GetForecast");
+                return res;
             }
             catch (Exception e)
             {
@@ -58,17 +60,6 @@ namespace ApiGeteway.Services
             }
 
             return null;
-        }
-
-        public static T ToObject<T>(JsonElement element, JsonSerializerOptions options = null)
-        {
-            var bufferWriter = new ArrayBufferWriter<byte>();
-            using (var writer = new Utf8JsonWriter(bufferWriter))
-            {
-                element.WriteTo(writer);
-            }
-
-            return JsonSerializer.Deserialize<T>(bufferWriter.WrittenSpan, options);
         }
     }
 }
