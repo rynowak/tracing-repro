@@ -9,10 +9,19 @@ Start-Process pwsh.exe -argument '-nologo -noprofile -executionpolicy bypass -co
 Start-Sleep -Seconds 1
 
 Start-Process pwsh.exe -argument '-nologo -noprofile -executionpolicy bypass -command `
-    dapr run --app-id weather `
+    dapr run --app-id weather-grpc `
     --app-port 5001 `
     --app-protocol grpc `
-	--dapr-http-port 3999 `
+	--dapr-http-port 3502 `
+	--dapr-grpc-port 3503 `
+    --log-level debug `
+    dotnet run dotnet -- -p .\WeatherMicroservice\WeatherMicroservice.csproj'
+
+Start-Process pwsh.exe -argument '-nologo -noprofile -executionpolicy bypass -command `
+    dapr run --app-id weather-http `
+    --app-port 5002 `
+    --app-protocol http `
+	--dapr-http-port 3504 `
     --log-level debug `
     dotnet run dotnet -- -p .\WeatherMicroservice\WeatherMicroservice.csproj'
 Start-Sleep -Seconds 1

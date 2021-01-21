@@ -1,7 +1,6 @@
 using System;
 using System.Text.Json;
 using ApiGeteway.Services;
-using Grpc.Net.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,12 +31,11 @@ namespace ApiGeteway
                     PropertyNameCaseInsensitive = true
                 }));
 
-            services.AddGrpcClient<Weather.WeatherClient>(o => o.Address = new Uri("http://localhost:3666"));
-            services.AddGrpcClient<Weather.WeatherClient>(o => o.Address = new Uri("http://localhost:3666"));
+            services.AddGrpcClient<Weather.WeatherClient>(o => o.Address = new Uri("http://localhost:5001"));
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiGeteway", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiGateway", Version = "v1"});
             });
 
             services.AddTransient<IWeatherService, WeatherService>();
@@ -50,14 +48,10 @@ namespace ApiGeteway
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiGeteway v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiGateway v1"));
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

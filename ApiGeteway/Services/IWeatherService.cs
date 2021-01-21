@@ -7,7 +7,8 @@ namespace ApiGeteway.Services
 {
     public interface IWeatherService
     {
-        Task<IEnumerable<WeatherForecastDto>> GetForecastsByDapr();
+        Task<IEnumerable<WeatherForecastDto>> GetForecastsByDaprGrpc();
         Task<WeatherReply> GetForecastsByGrpc();
+        Task<IEnumerable<WeatherForecastDto>> GetForecastsByRest();
     }
 }

@@ -26,16 +26,22 @@ namespace ApiGeteway.Controllers
             _weatherService = weatherService;
         }
 
-        [HttpGet("Dapr")]
+        [HttpGet("dapr-grpc")]
         public async Task<IEnumerable<WeatherForecastDto>> GetByDapr()
         {
-            return await _weatherService.GetForecastsByDapr();
+            return await _weatherService.GetForecastsByDaprGrpc();
         }
 
-        [HttpGet("Grpc")]
+        [HttpGet("core-grpc")]
         public async Task<WeatherReply> GetByGrpc()
         {
             return await _weatherService.GetForecastsByGrpc();
+        }
+
+        [HttpGet("webapi")]
+        public async Task<IEnumerable<WeatherForecastDto>> GetWebApi()
+        {
+            return await _weatherService.GetForecastsByRest();
         }
     }
 }
