@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "WeatherMicroservice.Services";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+package Weather;
+
+// The Weather service definition.
+service Weather {
+  // Sends a forecast
+  rpc GetForecast (google.protobuf.Empty) returns (WeatherReply);
+  rpc GetForecastStream (google.protobuf.Empty) returns (stream WeatherForecast);
+}
+
+message WeatherReply {
+  repeated WeatherForecast forecasts = 1;
+  int32 count = 2;
+}
+
+// The response message containing the Forecast.
+message WeatherForecast {
+  google.protobuf.Timestamp date = 1;
+  string summary = 2;
+  int32 temperatureC = 3;
+}

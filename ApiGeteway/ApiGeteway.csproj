@@ -16,7 +16,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Protobuf Include="..\WeatherMicroservice\Protos\weather.proto" GrpcServices="Client">
+        <Protobuf Include=".\Protos\weather.proto" GrpcServices="Client">
             <Link>Protos\weather.proto</Link>
         </Protobuf>
     </ItemGroup>

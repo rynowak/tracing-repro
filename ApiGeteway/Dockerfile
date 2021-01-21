@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ApiGeteway.csproj .
+RUN dotnet restore
+COPY . .
+RUN dotnet publish --no-restore -c Release -o /published ApiGeteway.csproj
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 as runtime
+WORKDIR /app
+ENV ASPNETCORE_ENVIRONMENT="production"
+COPY --from=build /published .
+ENTRYPOINT [ "dotnet", "ApiGeteway.dll" ]
