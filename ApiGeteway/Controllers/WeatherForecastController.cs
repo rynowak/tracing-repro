@@ -37,5 +37,11 @@ namespace ApiGeteway.Controllers
         {
             return await _weatherService.GetForecastsByGrpc();
         }
+
+        [HttpGet("WebApi")]
+        public async Task<WeatherReply> GetWebApi()
+        {
+            return await _weatherService.GetForecastsByGrpc();
+        }
     }
 }

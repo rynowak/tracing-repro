@@ -12,6 +12,15 @@
         <PackageReference Include="Dapr.AspNetCore" Version="1.0.0-rc02" />
         <PackageReference Include="Dapr.Client" Version="1.0.0-rc02" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.32.0" />
+        <PackageReference Include="MediatR" Version="9.0.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.6.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Commands" />
     </ItemGroup>
 
 </Project>

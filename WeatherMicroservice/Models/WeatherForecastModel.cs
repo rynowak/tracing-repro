@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace WeatherMicroservice.Services
+namespace WeatherMicroservice.Models
 {
-    public class WeatherForecastDto
+    public class WeatherForecastModel
     {
         public DateTime Date { get; set; }
         public int TemperatureC { get; set; }

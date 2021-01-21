@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ApiGeteway.Models;
 using Dapr.Client;
 using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 using WeatherMicroservice.Services;
@@ -20,9 +18,9 @@ namespace ApiGeteway.Services
         private const int DaprHttpPort = 3500;
         private const int DaprGrpcPort = 3501;
         private readonly DaprClient _dapr;
-        private readonly string _daprUrl = $"http://localhost:${DaprHttpPort}/v1.0/invoke/${WeatherName}";
         private readonly string _daprGrpc = $"http://localhost:${DaprGrpcPort}/v1.0/invoke/${WeatherName}";
         private readonly string _daprGrpc2 = $"http://localhost:${DaprGrpcPort}";
+        private readonly string _daprUrl = $"http://localhost:${DaprHttpPort}/v1.0/invoke/${WeatherName}";
         private ILogger<WeatherService> _logger;
 
         public WeatherService(ILoggerFactory loggerFactory, Weather.WeatherClient client, DaprClient dapr)
@@ -38,17 +36,6 @@ namespace ApiGeteway.Services
             var response = await client.GetForecastAsync(new Empty());
 
             return response;
-        }
-        
-        public static T ToObject<T>(JsonElement element, JsonSerializerOptions options = null)
-        {
-            var bufferWriter = new ArrayBufferWriter<byte>();
-            using (var writer = new Utf8JsonWriter(bufferWriter))
-            {
-                element.WriteTo(writer);
-            }
-
-            return JsonSerializer.Deserialize<T>(bufferWriter.WrittenSpan, options);
         }
 
         public async Task<IEnumerable<WeatherForecastDto>> GetForecastsByDapr()
@@ -71,6 +58,17 @@ namespace ApiGeteway.Services
             }
 
             return null;
+        }
+
+        public static T ToObject<T>(JsonElement element, JsonSerializerOptions options = null)
+        {
+            var bufferWriter = new ArrayBufferWriter<byte>();
+            using (var writer = new Utf8JsonWriter(bufferWriter))
+            {
+                element.WriteTo(writer);
+            }
+
+            return JsonSerializer.Deserialize<T>(bufferWriter.WrittenSpan, options);
         }
     }
 }
