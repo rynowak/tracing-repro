@@ -52,8 +52,6 @@ namespace ApiGeteway
             app.UseRouting();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-            app.ApplicationServices.CreateLoggerConfiguration();
         }
     }
 }
