@@ -16,17 +16,20 @@ namespace ApiGeteway.Services
     {
         private const string WeatherHttp = "weather-http";
         private const string WeatherGrpc = "weather-grpc";
-        static string DaprHttpPort => Environment.GetEnvironmentVariable("DAPR_PORT") ?? "3500";
-        static string WeatherServiceGrpcPort => Environment.GetEnvironmentVariable("WEATHER_GRPC_PORT") ?? "5001";
         private readonly DaprClient _dapr;
         private readonly string _daprUrl = $"http://localhost:{DaprHttpPort}/v1.0/invoke/{WeatherHttp}";
-        private ILogger<WeatherService> _logger;
+        private readonly ILogger<WeatherService> _logger;
 
         public WeatherService(ILoggerFactory loggerFactory, DaprClient dapr)
         {
             _logger = loggerFactory.CreateLogger<WeatherService>();
             _dapr = dapr;
         }
+
+        private static string DaprHttpPort => Environment.GetEnvironmentVariable("DAPR_PORT") ?? "3500";
+
+        private static string WeatherServiceGrpcPort =>
+            Environment.GetEnvironmentVariable("WEATHER_GRPC_PORT") ?? "5001";
 
         public async Task<WeatherReply> GetForecastsByGrpc()
         {

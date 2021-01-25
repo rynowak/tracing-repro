@@ -9,12 +9,12 @@ namespace WeatherMicroservice.Repository
 {
     public class WeatherForecastRepository : IWeatherForecastRepository
     {
-        private readonly ILogger<WeatherForecastRepository> _logger;
-
         private static readonly string[] Summaries =
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+
+        private readonly ILogger<WeatherForecastRepository> _logger;
 
         public WeatherForecastRepository(ILogger<WeatherForecastRepository> logger)
         {

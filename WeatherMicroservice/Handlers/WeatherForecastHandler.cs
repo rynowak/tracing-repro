@@ -11,10 +11,11 @@ namespace WeatherMicroservice.Handlers
 {
     public class WeatherForecastHandler : IRequestHandler<GetForecastQuery, IEnumerable<WeatherForecastModel>>
     {
-        private readonly IWeatherForecastRepository _weatherForecastRepository;
         private readonly ILogger<WeatherForecastHandler> _logger;
+        private readonly IWeatherForecastRepository _weatherForecastRepository;
 
-        public WeatherForecastHandler(IWeatherForecastRepository weatherForecastRepository, ILogger<WeatherForecastHandler> logger)
+        public WeatherForecastHandler(IWeatherForecastRepository weatherForecastRepository,
+            ILogger<WeatherForecastHandler> logger)
         {
             _weatherForecastRepository = weatherForecastRepository;
             _logger = logger;
