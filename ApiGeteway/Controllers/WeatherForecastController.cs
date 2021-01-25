@@ -29,6 +29,7 @@ namespace ApiGeteway.Controllers
         [HttpGet("dapr-grpc")]
         public async Task<IEnumerable<WeatherForecastDto>> GetByDapr()
         {
+            _logger.LogInformation("APIGW: Getting Forecasts via DaprGrpc");
             return await _weatherService.GetForecastsByDaprGrpc();
         }
 
@@ -41,6 +42,7 @@ namespace ApiGeteway.Controllers
         [HttpGet("webapi")]
         public async Task<IEnumerable<WeatherForecastDto>> GetWebApi()
         {
+            _logger.LogInformation("APIGW: Getting Forecasts via Dapr Rest");
             return await _weatherService.GetForecastsByRest();
         }
     }

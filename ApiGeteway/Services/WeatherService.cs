@@ -30,6 +30,7 @@ namespace ApiGeteway.Services
 
         public async Task<WeatherReply> GetForecastsByGrpc()
         {
+            _logger.LogInformation($"Executing vanilla Grpc call to http://localhost:{WeatherServiceGrpcPort}");
             var channel = GrpcChannel.ForAddress($"http://localhost:{WeatherServiceGrpcPort}");
             var client = new Weather.WeatherClient(channel);
             var response = await client.GetForecastAsync(new Empty());
@@ -40,7 +41,9 @@ namespace ApiGeteway.Services
         public async Task<IEnumerable<WeatherForecastDto>> GetForecastsByRest()
         {
             var httpClient = new HttpClient();
-            var streamAsync = httpClient.GetStreamAsync($"{_daprUrl}/method/Weather");
+            var url = $"{_daprUrl}/method/Weather";
+            _logger.LogInformation($"Executing Rest call via Dapr to {url}");
+            var streamAsync = httpClient.GetStreamAsync(url);
             var result = await JsonSerializer.DeserializeAsync<IEnumerable<WeatherForecastDto>>(await streamAsync);
 
             return result;
@@ -52,6 +55,7 @@ namespace ApiGeteway.Services
 
             try
             {
+                _logger.LogInformation($"Executing Grpc call via Dapr to {WeatherGrpc}");
                 var res = await _dapr.InvokeMethodAsync<IEnumerable<WeatherForecastDto>>(WeatherGrpc, "GetForecast");
                 return res;
             }
