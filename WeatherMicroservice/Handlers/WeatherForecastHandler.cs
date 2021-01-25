@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using WeatherMicroservice.Models;
 using WeatherMicroservice.Queries;
 using WeatherMicroservice.Repository;
@@ -11,15 +12,18 @@ namespace WeatherMicroservice.Handlers
     public class WeatherForecastHandler : IRequestHandler<GetForecastQuery, IEnumerable<WeatherForecastModel>>
     {
         private readonly IWeatherForecastRepository _weatherForecastRepository;
+        private readonly ILogger<WeatherForecastHandler> _logger;
 
-        public WeatherForecastHandler(IWeatherForecastRepository weatherForecastRepository)
+        public WeatherForecastHandler(IWeatherForecastRepository weatherForecastRepository, ILogger<WeatherForecastHandler> logger)
         {
             _weatherForecastRepository = weatherForecastRepository;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<WeatherForecastModel>> Handle(GetForecastQuery request,
             CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Fetching weather data from weather repo");
             return await _weatherForecastRepository.GetForecastsAsync();
         }
     }
