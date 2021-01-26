@@ -6,7 +6,7 @@ deploy:apigateway:docker:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
   script:
-    - docker build -f ./ApiGeteway/Dockerfile -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/gateway:${CI_COMMIT_REF_NAME} ./ApiGeteway
+    - docker build -f ./Docker/Dockerfile.api -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/gateway:${CI_COMMIT_REF_NAME} .
     - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/gateway:${CI_COMMIT_REF_NAME}
   after_script:
     - docker rmi ${CI_REGISTRY}/${CI_PROJECT_PATH}/gateway:${CI_COMMIT_REF_NAME}
@@ -25,7 +25,7 @@ deploy:weatherservice:docker:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
   script:
-    - docker build -f ./WeatherMicroservice/Dockerfile -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/weather:${CI_COMMIT_REF_NAME} ./WeatherMicroservice
+    - docker build -f ./Docker/Dockerfile.weather -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/weather:${CI_COMMIT_REF_NAME} .
     - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/weather:${CI_COMMIT_REF_NAME}
   after_script:
     - docker rmi ${CI_REGISTRY}/${CI_PROJECT_PATH}/weather:${CI_COMMIT_REF_NAME}

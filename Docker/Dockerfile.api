@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ApiGeteway.csproj .
+COPY ApiGateway/ApiGeteway.csproj .
 RUN dotnet restore
 COPY . .
 RUN dotnet publish --no-restore -c Release -o /published ApiGeteway.csproj
