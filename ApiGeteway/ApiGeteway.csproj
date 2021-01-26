@@ -12,11 +12,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Serilog" Version="2.10.1-dev-01265" />
         <PackageReference Include="Serilog.AspNetCore" Version="3.4.1-dev-00188" />
-        <PackageReference Include="Serilog.Enrichers.Span" Version="1.1.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0-dev-00839" />
-        <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.5.0-alpha0003" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
     
@@ -24,6 +20,10 @@
         <Protobuf Include=".\Protos\weather.proto" GrpcServices="Client">
             <Link>Protos\weather.proto</Link>
         </Protobuf>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Placeme.Infrastructure\Placeme.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

@@ -53,6 +53,8 @@ namespace WeatherMicroservice
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Weather Microservice v1"));
+            
+            // app.UseSerilogRequestLogging();
 
             app.UseRouting();
 
