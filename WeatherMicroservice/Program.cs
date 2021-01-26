@@ -10,7 +10,9 @@ namespace WeatherMicroservice
     {
         public static void Main(string[] args)
         {
-            Log.Logger = LogExtensions.CreateLogger();
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var isDevelopment = environment == Environments.Development;
+            Log.Logger = LogExtensions.CreateLoggerConfiguration(isDevelopment).CreateLogger();
 
             try
             {

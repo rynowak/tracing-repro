@@ -7,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using WeatherMicroservice.Services;
+using Serilog.Extensions;
 
 namespace ApiGateway
 {
@@ -38,6 +40,7 @@ namespace ApiGateway
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiGateway", Version = "v1"});
             });
 
+            services.AddSingleton(Log.Logger);
             services.AddTransient<IWeatherService, WeatherService>();
         }
 

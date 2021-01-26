@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using WeatherMicroservice.Queries;
 using WeatherMicroservice.Services;
 
@@ -11,10 +11,10 @@ namespace WeatherMicroservice.GrpcServices
 {
     public class WeatherService : Weather.WeatherBase
     {
-        private readonly ILogger<WeatherService> _logger;
+        private readonly ILogger _logger;
         private readonly IMediator _mediator;
 
-        public WeatherService(ILogger<WeatherService> logger, IMediator mediator)
+        public WeatherService(ILogger logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
@@ -51,9 +51,9 @@ namespace WeatherMicroservice.GrpcServices
             foreach (var forecast in forecasts)
             {
                 if (context.CancellationToken.IsCancellationRequested) break;
-                _logger.LogInformation("Populating forecast");
+                _logger.Information("Populating forecast");
                 await Task.Delay(500); // Looking busy
-                _logger.LogInformation("Sending WeatherData response");
+                _logger.Information("Sending WeatherData response");
                 await responseStream.WriteAsync(forecast);
             }
         }

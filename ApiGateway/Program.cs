@@ -10,7 +10,9 @@ namespace ApiGateway
     {
         public static void Main(string[] args)
         {
-            Log.Logger = LogExtensions.CreateLogger();
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var isDevelopment = environment == Environments.Development;
+            Log.Logger = LogExtensions.CreateLoggerConfiguration(isDevelopment).CreateLogger();
 
             try
             {
@@ -30,8 +32,8 @@ namespace ApiGateway
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .UseSerilog();
         }
     }
 }

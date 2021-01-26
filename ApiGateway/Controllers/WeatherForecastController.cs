@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ApiGateway.Models;
 using ApiGateway.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using WeatherMicroservice.Services;
 
 namespace ApiGateway.Controllers
@@ -12,10 +12,10 @@ namespace ApiGateway.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger _logger;
         private readonly IWeatherService _weatherService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherService weatherService)
+        public WeatherForecastController(ILogger logger, IWeatherService weatherService)
         {
             _logger = logger;
             _weatherService = weatherService;
@@ -24,7 +24,7 @@ namespace ApiGateway.Controllers
         [HttpGet("dapr-grpc")]
         public async Task<IEnumerable<WeatherForecastDto>> GetByDapr()
         {
-            _logger.LogInformation("APIGW: Getting Forecasts via DaprGrpc");
+            _logger.Information("APIGW: Getting Forecasts via DaprGrpc");
             return await _weatherService.GetForecastsByDaprGrpc();
         }
 
@@ -37,7 +37,7 @@ namespace ApiGateway.Controllers
         [HttpGet("webapi")]
         public async Task<IEnumerable<WeatherForecastDto>> GetWebApi()
         {
-            _logger.LogInformation("APIGW: Getting Forecasts via Dapr Rest");
+            _logger.Information("APIGW: Getting Forecasts via Dapr Rest");
             return await _weatherService.GetForecastsByRest();
         }
     }
