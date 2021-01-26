@@ -29,6 +29,7 @@ namespace Placeme.Infrastructure.Logging
         public static LoggerConfiguration CreateLoggerConfiguration(bool isDevelopment = false)
         {
             Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+            
             var logLevel = GetLogEventLevel();
 
             var config = new LoggerConfiguration()

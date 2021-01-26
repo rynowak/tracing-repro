@@ -7,6 +7,7 @@ using ApiGateway.Models;
 using Dapr.Client;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
+using Placeme.Infrastructure.Tracing;
 using Serilog;
 using WeatherMicroservice.Services;
 
@@ -17,13 +18,15 @@ namespace ApiGateway.Services
         private const string WeatherHttp = "weather-http";
         private const string WeatherGrpc = "weather-grpc";
         private readonly DaprClient _dapr;
+        private readonly IHttpTraceId _httpTraceId;
         private readonly string _daprUrl = $"http://localhost:{DaprHttpPort}/v1.0/invoke/{WeatherHttp}";
         private readonly ILogger _logger;
 
-        public WeatherService(ILogger logger, DaprClient dapr)
+        public WeatherService(ILogger logger, DaprClient dapr, IHttpTraceId httpTraceId)
         {
             _logger = logger;
             _dapr = dapr;
+            _httpTraceId = httpTraceId;
         }
 
         private static string DaprHttpPort => Environment.GetEnvironmentVariable("DAPR_PORT") ?? "3500";
@@ -65,7 +68,11 @@ namespace ApiGateway.Services
             try
             {
                 _logger.Information("Executing Grpc call via Dapr to {WeatherGrpc}", WeatherGrpc);
-                var res = await _dapr.InvokeMethodAsync<IEnumerable<WeatherForecastDto>>(WeatherGrpc, "GetForecast");
+                
+                var options = new HttpInvocationOptions();
+                options.Headers.Add("grpc-trace-bin", _httpTraceId.GetTraceId());
+                
+                var res = await _dapr.InvokeMethodAsync<IEnumerable<WeatherForecastDto>>(WeatherGrpc, "GetForecast", options);
                 return res;
             }
             catch (Exception e)

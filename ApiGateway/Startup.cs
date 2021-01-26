@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Placeme.Infrastructure.Tracing;
 using Serilog;
 using WeatherMicroservice.Services;
 using Serilog.Extensions;
@@ -33,8 +34,8 @@ namespace ApiGateway
                     PropertyNameCaseInsensitive = true
                 }));
 
+            services.AddHttpContextAccessor();
             services.AddGrpcClient<Weather.WeatherClient>(o => o.Address = new Uri("http://localhost:5001"));
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiGateway", Version = "v1"});
@@ -42,12 +43,16 @@ namespace ApiGateway
 
             services.AddSingleton(Log.Logger);
             services.AddTransient<IWeatherService, WeatherService>();
+            services.AddTransient<IHttpTraceId, HttpTraceId>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiGateway v1"));
             

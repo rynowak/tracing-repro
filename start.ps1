@@ -5,7 +5,7 @@ Start-Process pwsh.exe -argument '-nologo -noprofile -executionpolicy bypass -co
 	--dapr-grpc-port 3501 `
     --app-protocol grpc `
     --log-level debug `
-    dotnet run dotnet -- -p .\ApiGeteway\ApiGeteway.csproj'
+    dotnet run dotnet -- -p .\ApiGateway\ApiGateway.csproj'
 Start-Sleep -Seconds 1
 
 Start-Process pwsh.exe -argument '-nologo -noprofile -executionpolicy bypass -command `
