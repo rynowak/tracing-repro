@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Placeme.Infrastructure.Logging;
 using Serilog;
 
-namespace ApiGeteway
+namespace ApiGateway
 {
     public static class Program
     {

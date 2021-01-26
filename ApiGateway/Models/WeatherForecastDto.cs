@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ApiGeteway.Models
+namespace ApiGateway.Models
 {
     public class WeatherForecastDto
     {

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGeteway", "ApiGeteway\ApiGeteway.csproj", "{143CF046-97CD-403B-AC2A-9042817BAC0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{143CF046-97CD-403B-AC2A-9042817BAC0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherMicroservice", "WeatherMicroservice\WeatherMicroservice.csproj", "{14FCC87E-949B-439D-A76B-F3D5FFB44546}"
 EndProject

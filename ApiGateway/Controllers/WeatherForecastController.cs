@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ApiGeteway.Models;
-using ApiGeteway.Services;
+using ApiGateway.Models;
+using ApiGateway.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WeatherMicroservice.Services;
 
-namespace ApiGeteway.Controllers
+namespace ApiGateway.Controllers
 {
     [ApiController]
     [Route("[controller]")]

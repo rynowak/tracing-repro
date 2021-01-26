@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ApiGeteway.Models;
+using ApiGateway.Models;
 using Dapr.Client;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 using WeatherMicroservice.Services;
 
-namespace ApiGeteway.Services
+namespace ApiGateway.Services
 {
     public class WeatherService : IWeatherService
     {

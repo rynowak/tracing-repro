@@ -1,6 +1,6 @@
 using System;
 using System.Text.Json;
-using ApiGeteway.Services;
+using ApiGateway.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WeatherMicroservice.Services;
 
-namespace ApiGeteway
+namespace ApiGateway
 {
     public class Startup
     {

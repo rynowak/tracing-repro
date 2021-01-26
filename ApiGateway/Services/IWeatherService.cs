@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ApiGeteway.Models;
+using ApiGateway.Models;
 using WeatherMicroservice.Services;
 
-namespace ApiGeteway.Services
+namespace ApiGateway.Services
 {
     public interface IWeatherService
     {
