@@ -1,18 +1,20 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-
 WORKDIR /src
+COPY *.sln .
+COPY Placeme.Infrastructure/*.csproj ./Placeme.Infrastructure/
+COPY WeatherMicroservice/*.csproj ./WeatherMicroservice/
+RUN dotnet restore WeatherMicroservice/*.csproj
 
-COPY WeatherMicroservice.csproj .
-RUN dotnet restore
+COPY ./Placeme.Infrastructure ./Placeme.Infrastructure
+COPY ./WeatherMicroservice ./WeatherMicroservice
 
-COPY . .
-
+WORKDIR /src/WeatherMicroservice
 RUN dotnet publish --no-restore -c Release -o /published WeatherMicroservice.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 as runtime
 WORKDIR /app
 #ENV ASPNETCORE_URLS=http://+:5001;http://+:5002
-#ENV ASPNETCORE_ENVIRONMENT=”production”
+ENV ASPNETCORE_ENVIRONMENT=”production”
 EXPOSE 5001
 EXPOSE 5002
 COPY --from=build /published .

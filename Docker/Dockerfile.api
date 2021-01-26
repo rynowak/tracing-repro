@@ -1,12 +1,18 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ApiGateway/ApiGeteway.csproj .
-RUN dotnet restore
-COPY . .
-RUN dotnet publish --no-restore -c Release -o /published ApiGeteway.csproj
+COPY *.sln .
+COPY Placeme.Infrastructure/*.csproj ./Placeme.Infrastructure/
+COPY ApiGateway/*.csproj ./ApiGateway/
+RUN dotnet restore ApiGateway/*.csproj
+
+COPY ./Placeme.Infrastructure ./Placeme.Infrastructure
+COPY ./ApiGateway ./ApiGateway
+
+WORKDIR /src/ApiGateway
+RUN dotnet publish --no-restore -c Release -o /published ApiGateway.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 as runtime
 WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT="production"
 COPY --from=build /published .
-ENTRYPOINT [ "dotnet", "ApiGeteway.dll" ]
+ENTRYPOINT [ "dotnet", "ApiGateway.dll" ]
