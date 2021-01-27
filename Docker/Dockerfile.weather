@@ -3,6 +3,7 @@ WORKDIR /src
 COPY *.sln .
 COPY Placeme.Infrastructure/*.csproj ./Placeme.Infrastructure/
 COPY WeatherMicroservice/*.csproj ./WeatherMicroservice/
+RUN dotnet restore Placeme.Infrastructure/*.csproj
 RUN dotnet restore WeatherMicroservice/*.csproj
 
 COPY ./Placeme.Infrastructure ./Placeme.Infrastructure

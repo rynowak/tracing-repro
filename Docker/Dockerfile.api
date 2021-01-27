@@ -4,6 +4,7 @@ COPY *.sln .
 COPY Placeme.Infrastructure/*.csproj ./Placeme.Infrastructure/
 COPY ApiGateway/*.csproj ./ApiGateway/
 RUN dotnet restore ApiGateway/*.csproj
+RUN dotnet restore Placeme.Infrastructure/*.csproj
 
 COPY ./Placeme.Infrastructure ./Placeme.Infrastructure
 COPY ./ApiGateway ./ApiGateway

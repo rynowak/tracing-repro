@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using ApiGateway.Models;
 using Dapr.Client;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Placeme.Infrastructure.Tracing;
 using Serilog;
@@ -66,11 +66,8 @@ namespace ApiGateway.Services
             try
             {
                 _logger.Information("Executing Grpc call via Dapr to {WeatherGrpc}", WeatherGrpc);
-                
-                var options = new HttpInvocationOptions();
-                options.Headers.Add("grpc-trace-bin", _httpTraceId.GetTraceId());
-                
-                var res = await _dapr.InvokeMethodAsync<IEnumerable<WeatherForecastDto>>(WeatherGrpc, "GetForecast", options);
+
+                var res = await _dapr.InvokeMethodAsync<IEnumerable<WeatherForecastDto>>(WeatherGrpc, "GetForecast");
                 return res;
             }
             catch (Exception e)
