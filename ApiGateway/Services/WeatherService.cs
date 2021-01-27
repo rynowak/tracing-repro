@@ -19,7 +19,6 @@ namespace ApiGateway.Services
         private const string WeatherGrpc = "weather-grpc";
         private readonly DaprClient _dapr;
         private readonly IHttpTraceId _httpTraceId;
-        private readonly string _daprUrl = $"http://localhost:{DaprHttpPort}/v1.0/invoke/{WeatherHttp}";
         private readonly ILogger _logger;
 
         public WeatherService(ILogger logger, DaprClient dapr, IHttpTraceId httpTraceId)
@@ -28,8 +27,6 @@ namespace ApiGateway.Services
             _dapr = dapr;
             _httpTraceId = httpTraceId;
         }
-
-        private static string DaprHttpPort => Environment.GetEnvironmentVariable("DAPR_PORT") ?? "3500";
 
         private static string WeatherServiceGrpcPort => Environment.GetEnvironmentVariable("WEATHER_GRPC_PORT") ?? "5001";
 
@@ -45,13 +42,14 @@ namespace ApiGateway.Services
 
         public async Task<IEnumerable<WeatherForecastDto>> GetForecastsByRest()
         {
-            var httpClient = new HttpClient();
-            var url = $"{_daprUrl}/method/Weather";
-            _logger.Information("Executing Rest call via Dapr {Url}", url);
+            _logger.Information("Executing Rest call via Dapr to {DaprService}", WeatherHttp);
             try
             {
-                var streamAsync = httpClient.GetStreamAsync(url);
-                return await JsonSerializer.DeserializeAsync<IEnumerable<WeatherForecastDto>>(await streamAsync);
+                return await _dapr.InvokeMethodAsync<IEnumerable<WeatherForecastDto>>(WeatherHttp, "Weather",
+                    new HttpInvocationOptions
+                    {
+                        Method = HttpMethod.Get
+                    });
             }
             catch (Exception e)
             {
