@@ -1,10 +1,13 @@
 using System;
 using System.Text.Json;
 using ApiGateway.Services;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Placeme.Infrastructure.Tracing;
@@ -44,6 +47,7 @@ namespace ApiGateway
             services.AddSingleton(Log.Logger);
             services.AddTransient<IWeatherService, WeatherService>();
             services.AddTransient<IHttpTraceId, HttpTraceId>();
+            services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +64,18 @@ namespace ApiGateway
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions() {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/readiness", new HealthCheckOptions()
+                {
+                    Predicate = r => r.Name.Contains("self")
+                });
+            });
         }
     }
 }
