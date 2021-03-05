@@ -32,8 +32,8 @@ namespace ApiGateway.Services
 
         public async Task<WeatherReply> GetForecastsByGrpc()
         {
-            _logger.Information("Executing vanilla Grpc call {GrpcUrl}", $"http://weather-grpc-dapr:{WeatherServiceGrpcPort}");
-            var channel = GrpcChannel.ForAddress($"http://weather-grpc-dapr:{WeatherServiceGrpcPort}");
+            _logger.Information("Executing vanilla Grpc call {GrpcUrl}", $"http://localhost:{WeatherServiceGrpcPort}");
+            var channel = GrpcChannel.ForAddress($"http://localhost:{WeatherServiceGrpcPort}");
             var client = new Weather.WeatherClient(channel);
             var response = await client.GetForecastAsync(new Empty());
 

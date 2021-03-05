@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Placeme.Infrastructure.Tracing;
 using Serilog;
 using WeatherMicroservice.Dapr;
 using WeatherMicroservice.GrpcServices;
@@ -44,6 +45,8 @@ namespace WeatherMicroservice
 
             services.AddMediatR(typeof(Startup));
             services.AddSingleton(Log.Logger);
+            services.AddHttpContextAccessor();
+            services.AddTransient<IHttpTraceId, HttpTraceId>();
             services.AddTransient<IWeatherForecastRepository, WeatherForecastRepository>();
             services.AddTransient<AppCallback.AppCallbackBase, DaprGrpcDispatcher>();
         }

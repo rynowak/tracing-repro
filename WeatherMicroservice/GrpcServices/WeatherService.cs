@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
+using Placeme.Infrastructure.Tracing;
 using Serilog;
 using WeatherMicroservice.Queries;
 using WeatherMicroservice.Services;
@@ -13,15 +14,19 @@ namespace WeatherMicroservice.GrpcServices
     {
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
+        private readonly IHttpTraceId traceId;
 
-        public WeatherService(ILogger logger, IMediator mediator)
+        public WeatherService(ILogger logger, IMediator mediator, IHttpTraceId traceId)
         {
             _logger = logger;
             _mediator = mediator;
+            this.traceId = traceId;
         }
 
         public override async Task<WeatherReply> GetForecast(Empty request, ServerCallContext context)
         {
+            _logger.Information("App: Getting Forecasts via Grpc {TraceId}", this.traceId.GetTraceId());
+
             var result = await _mediator.Send(new GetForecastQuery());
             var forecasts = result.Select(r => new WeatherForecast
             {

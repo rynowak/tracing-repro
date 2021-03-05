@@ -7,6 +7,9 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Placeme.Infrastructure.Tracing;
 using WeatherMicroservice.Queries;
 using WeatherMicroservice.Services;
 
@@ -24,6 +27,16 @@ namespace WeatherMicroservice.Dapr
 
         public override async Task<InvokeResponse> OnInvoke(InvokeRequest request, ServerCallContext context)
         {
+            var httpContext = context.GetHttpContext();
+            var logger = httpContext.RequestServices.GetRequiredService<ILogger<DaprGrpcDispatcher>>();
+            var traceId = httpContext.RequestServices.GetRequiredService<IHttpTraceId>();
+            logger.LogInformation("App: Getting Forecasts via DaprGrpc {TraceId}", traceId.GetTraceId());
+
+            foreach (var header in httpContext.Request.Headers)
+            {
+                logger.LogInformation("Header: {Key}: {Value}", header.Key, header.Value.ToString());
+            }
+
             var response = new InvokeResponse();
             switch (request.Method)
             {
